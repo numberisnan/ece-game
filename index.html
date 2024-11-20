@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Preterm Birth and Development Quiz Game</title>
+        <script src="quiz.js"></script>
+        <style>
+            html {
+                background-color: lightgreen;
+                text-align: center;
+            }
+
+            table {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #grid td, #grid tr{
+                padding: 0 0 0 0;
+            }
+
+            #answer td {
+                border: 2px solid red;
+            }
+
+            #answer td:hover {
+                border: 2px solid darkgreen;
+            }
+
+            #bottom h1 {
+                color: red;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1>Preterm Birth and Development Quiz Game</h1>
+        <table id="grid">
+            <tr>
+                <td><img id="img1" width="250" src="tiles/tile-empty.jpg"></td>
+                <td><img id="img2" width="250" src="tiles/tile-empty.jpg"></td>
+                <td><img id="img3" width="250" src="tiles/tile-empty.jpg"></td>
+            </tr>
+            <tr>
+                <td><img id="img4" width="250" src="tiles/tile-empty.jpg"></td>
+                <td><img id="img5" width="250" src="tiles/tile-empty.jpg"></td>
+                <td><img id="img6" width="250" src="tiles/tile-empty.jpg"></td>
+            </tr>
+        </table>
+
+        <div id="bottom">
+            <h3 id="question">What is 1 + 1?</h3>
+            <p>Click the correct answer</p>
+            <table id="answer">
+                <tr>
+                    <td id="ans0">Loading</td>
+                    <td id="ans1">Loading</td>
+                </tr>
+                <tr>
+                    <td id="ans2">Loading</td>
+                    <td id="ans3">Loading</td>
+                </tr>
+            </table>
+        </div>
+
+        <script>
+            const urlParams = new URL(window.location.href).searchParams;
+            const questionnum = urlParams.get("questionnum") || 0;
+            const correctnum = urlParams.get("correctnum") || 0;
+            
+            for (let i = 0; i < correctnum; i++) {
+                let image = document.getElementById("img" + (i+1));
+                image.setAttribute("src", "tiles/tile-" + i + ".jpg");
+            }
+
+            if (questionnum < 6) {
+                const q = quiz[questionnum];
+                document.getElementById("question").innerText = q.q;
+                for (let i = 0; i < 4; i++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("questionnum", Number(questionnum) + 1);
+                    if (i == q.c) {
+                        url.searchParams.set("correctnum", Number(correctnum) + 1);
+                    }
+                    document.getElementById("ans" + i).innerHTML = "<a href='" + url.href + "'>" + q.a[i] + "</a>";
+                }
+            } else {
+                let text;
+                if (correctnum == questionnum) {
+                    text = "You win!";
+                } else {
+                    text = "You lose :(";
+                }
+
+                document.getElementById("bottom").innerHTML = "<h1>" + text + "</h1><br><a href=" + window.location.href.split("?")[0] + ">Reset</a>";
+            }
+
+            
+        </script>
+    </body>
+</html>
